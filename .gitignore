@@ -6,3 +6,5 @@ npm-debug.log
 vpn/**
 !vpn/.gitkeep
 ?/
+src/.DS_Store
+gradle/

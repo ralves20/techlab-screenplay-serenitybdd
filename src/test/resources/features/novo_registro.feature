@@ -15,3 +15,8 @@ Funcionalidade: Realizar cadastro de um novo estudante
     E ele preenche todos os dados do aluno corretamente
     Quando ele aciona a opção para gravar os dados no sistema
     Então os dados do aluno são gravados com sucesso
+
+  @invalido @regressivo @prioridade:media
+  Cenário: Validar obrigatoriedade de preenchimento
+    Quando ele aciona a opção para gravar os dados no sistema sem preencher campo algum
+    Então ele deve ver que impedindo o cadastro erros são apresentados para os campos obrigatórios

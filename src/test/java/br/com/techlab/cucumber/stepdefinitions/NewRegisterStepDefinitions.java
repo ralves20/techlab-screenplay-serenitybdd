@@ -3,13 +3,12 @@ package br.com.techlab.cucumber.stepdefinitions;
 import br.com.techlab.screenplay.components.StudentComponent;
 import br.com.techlab.screenplay.questions.TheRegisterConfirmationMessage;
 import br.com.techlab.screenplay.questions.TheRegisterSuccessConfirmation;
+import br.com.techlab.screenplay.questions.TheRegisteredStudent;
+import br.com.techlab.screenplay.questions.TheRequiredFieldError;
 import br.com.techlab.screenplay.tasks.RegisterStudent;
 import br.com.techlab.screenplay.tasks.Start;
 import io.cucumber.java.Before;
-import io.cucumber.java.pt.Dado;
-import io.cucumber.java.pt.E;
-import io.cucumber.java.pt.Entao;
-import io.cucumber.java.pt.Quando;
+import io.cucumber.java.pt.*;
 import net.serenitybdd.screenplay.actions.Click;
 import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.actors.OnlineCast;
@@ -46,8 +45,21 @@ public class NewRegisterStepDefinitions {
     @Entao("os dados do aluno são gravados com sucesso")
     public void osDadosDoAlunoSãoGravadosComSucesso() {
         theActorInTheSpotlight().should(seeThat(TheRegisterSuccessConfirmation.modal(), isVisible()),
-                seeThat(TheRegisterConfirmationMessage.text(), is(equalTo("Thanks for submitting the form"))));
-//        CRIAR QUESTION PARA COMPARAR OS DADOS PREENCHIDOS X DADOS SALVOS
-//        REFATORAR O PROJETO -> TASKS E QUESTIONS
+                seeThat(TheRegisterConfirmationMessage.text(), is(equalTo("Thanks for submitting the form"))),
+                seeThat("the registered student's name", TheRegisteredStudent.name(), is(equalTo(theActorInTheSpotlight().recall("studentFullName")))),
+                seeThat("the registered student's email",TheRegisteredStudent.email(), is(equalTo(theActorInTheSpotlight().recall("studentEmail")))),
+                seeThat("the registered student's mobile",TheRegisteredStudent.mobile(), is(equalTo(theActorInTheSpotlight().recall("studentMobile")))),
+                seeThat("the registered student's subjects",TheRegisteredStudent.subjects(), is(equalTo(theActorInTheSpotlight().recall("studentSubjects")))));
+    }
+
+    @Então("ele deve ver que impedindo o cadastro erros são apresentados para os campos obrigatórios")
+    public void eleDeveVerQueImpedindoOCadastroErrosSãoApresentadosParaOsCamposObrigatórios() {
+        String requiredColor = "rgb(220, 53, 69)";
+        theActorInTheSpotlight().should(seeThat(TheRequiredFieldError.ofFieldName(), is(equalTo(requiredColor))));
+    }
+
+    @Quando("ele aciona a opção para gravar os dados no sistema sem preencher campo algum")
+    public void eleAcionaAOpçãoParaGravarOsDadosNoSistemaSemPreencherCampoAlgum() {
+        theActorInTheSpotlight().attemptsTo(Click.on(StudentComponent.SUBMIT));
     }
 }
